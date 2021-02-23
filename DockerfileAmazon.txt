@@ -1,9 +1,3 @@
-#---------------------------------------------------------------------------
-# Dockefile to build Docker Image of Apache WebServer running on AmazonLinux 
-#
-# Made by Denis Astahov ADV-IT  13-March-2019
-#---------------------------------------------------------------------------
-
 FROM amazonlinux
 
 RUN yum -y update

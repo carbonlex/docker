@@ -1,5 +1,6 @@
 Команда Docker	Что делает, что выдаёт
-docker -v	Версия Docker Engine
+
+docker -v Версия Docker Engine
 docker ps	Список Бегущих контейнеров
 docket ps -a	Список ВСЕХ контейнеров
 docker images	Список локальных Images 
