@@ -8,4 +8,4 @@ receivers:
             text: "{{ .CommonAnnotations.description }}"
             username: 'Prometheus'
             channel: '#alerts'
-            api_url: 'https://hooks.slack.com/services/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'
+            api_url: 'https://hooks.slack.com/services/'
