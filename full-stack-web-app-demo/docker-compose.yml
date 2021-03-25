@@ -1,4 +1,4 @@
-version: '2.1'
+version: '3.8'
 services:
   playground-web-db:
     image: mongo:4.2.2
