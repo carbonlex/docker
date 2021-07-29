@@ -7,41 +7,42 @@ networks:
 volumes:
   prometheus_data: {}
   grafana_data: {}
+  db_data:
 
 
 
 services:
-  playground-web-db:
-    image: mongo:4.2.2
-    container_name: playground-web-db
+  db:
+    image: mysql:8.0.19
+    container_name: mysql
+    command: '--default-authentication-plugin=mysql_native_password'
+    volumes:
+      - db_data:/var/lib/mysql
+    restart: always
     environment:
-      MONGO_INITDB_DATABASE: playground-web
-    ports:
-      - 27017:27017
+      - MYSQL_ROOT_PASSWORD=somewordpress
+      - MYSQL_DATABASE=wordpress
+      - MYSQL_USER=wordpress
+      - MYSQL_PASSWORD=wordpress
+    expose:
+      - 3306
+      - 33060
     networks:
       - monitor-net
 
-  playground-web-frontend:
-    image: playground-web-frontend:latest
-    container_name: playground-web-frontend
-    environment:
-      PORT: 4000
-      PROXY_API: http://playground-web-backend:8080/
+  wordpress:
+    image: wordpress:latest
+    container_name: wordpress
     ports:
-      - 4000:4000
+      - 8081:80
+    restart: always
+    environment:
+      - WORDPRESS_DB_HOST=db
+      - WORDPRESS_DB_USER=wordpress
+      - WORDPRESS_DB_PASSWORD=wordpress
+      - WORDPRESS_DB_NAME=wordpress
     networks:
       - monitor-net
-
-  playground-web-backend:
-    image: playground-web-backend:latest
-    container_name: playground-web-backend
-    environment:
-      MONGODB_URI: mongodb://playground-web-db:27017/playground-web
-    ports:
-      - 8080:8080
-    networks:
-      - monitor-net
-
 
   prometheus:
     image: prom/prometheus:v2.25.0

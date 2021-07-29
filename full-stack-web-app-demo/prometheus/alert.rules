@@ -42,16 +42,16 @@ groups:
 - name: containers
   rules:
   - alert: playground-web-backend_down
-    expr: absent(container_memory_usage_bytes{name="playground-web-backend"})
+    expr: absent(container_memory_usage_bytes{name="wordpress"})
     for: 30s
     labels:
       severity: critical
     annotations:
       summary: "Backend down"
-      description: "Playground-web-backend container is down for more than 30 seconds."
+      description: "Wordpress container is down for more than 30 seconds."
 
   - alert: playground-web-backend_high_cpu
-    expr: sum(rate(container_cpu_usage_seconds_total{name="playground-web-backend"}[1m])) / count(node_cpu_seconds_total{mode="system"}) * 100 > 10
+    expr: sum(rate(container_cpu_usage_seconds_total{name="wordpress"}[1m])) / count(node_cpu_seconds_total{mode="system"}) * 100 > 10
     for: 30s
     labels:
       severity: warning
@@ -60,7 +60,7 @@ groups:
       description: "playground-web-backend CPU usage is {{ humanize $value}}%."
 
   - alert: playground-web-backend_high_memory
-    expr: sum(container_memory_usage_bytes{name="playground-web-backend"}) > 1200000000
+    expr: sum(container_memory_usage_bytes{name="wordpress"}) > 1200000000
     for: 30s
     labels:
       severity: warning
@@ -68,3 +68,11 @@ groups:
       summary: "playground-web-backend high memory usage"
       description: "playground-web-backend memory consumption is at {{ humanize $value}}."
 
+  - alert: playground-web-backend_high_memory
+    expr: sum(container_memory_usage_bytes{name="mysql"}) > 1200000000
+    for: 30s
+    labels:
+      severity: warning
+    annotations:
+      summary: "playground-web-backend high memory usage"
+      description: "playground-web-backend memory consumption is at {{ humanize $value}}."

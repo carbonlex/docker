@@ -1,21 +1,28 @@
 version: '3.8'
 services:
-  playground-web-db:
-    image: mongo:4.2.2
+  db:
+    image: mysql:8.0.19
+    command: '--default-authentication-plugin=mysql_native_password'
+    volumes:
+      - db_data:/var/lib/mysql
+    restart: always
     environment:
-      MONGO_INITDB_DATABASE: playground-web
+      - MYSQL_ROOT_PASSWORD=somewordpress
+      - MYSQL_DATABASE=wordpress
+      - MYSQL_USER=wordpress
+      - MYSQL_PASSWORD=wordpress
+    expose:
+      - 3306
+      - 33060
+  wordpress:
+    image: wordpress:latest
     ports:
-      - 27017:27017
-  playground-web-frontend:
-    image: playground-web-frontend:latest
+      - 8081:80
+    restart: always
     environment:
-      PORT: 3000
-      PROXY_API: http://playground-web-backend:8080/
-    ports:
-      - 3000:3000
-  playground-web-backend:
-    image: playground-web-backend:latest
-    environment:
-      MONGODB_URI: mongodb://playground-web-db:27017/playground-web
-    ports:
-      - 8080:8080
+      - WORDPRESS_DB_HOST=db
+      - WORDPRESS_DB_USER=wordpress
+      - WORDPRESS_DB_PASSWORD=wordpress
+      - WORDPRESS_DB_NAME=wordpress
+volumes:
+  db_data:
